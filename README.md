@@ -1,2 +1,0 @@
-# typesense
-typesense project
