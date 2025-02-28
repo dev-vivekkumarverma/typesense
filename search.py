@@ -62,8 +62,10 @@ def cosine_similarity(vec1, vec2):
 
 def search_skills(query, records_per_page):
     """Searches for skills based on query and ranks by cosine similarity."""
-    query_embedding = model.encode(query).tolist()
-    
+    query_embedding = model.encode(str(query).lower()).tolist()
+    query_skills = set()
+    for section in query.lower().split(","):
+        query_skills.update(section.split())
     search_params = {
         "q": "*",  # Fetch all documents
         "query_by": "bio",  # Necessary to retrieve documents
@@ -80,8 +82,16 @@ def search_skills(query, records_per_page):
         embedding = hit["document"]["embedding"]
 
         similarity_score = float(cosine_similarity(query_embedding, embedding))
-        matched_records.append((similarity_score, user_id, bio))
-
+        bio_words = set()
+        for section in bio.lower().split(','):
+            bio_words.update(section.split())
+        
+        matching_skills = list(bio_words.intersection(query_skills))
+        
+        matched_records.append((similarity_score, user_id, bio, matching_skills))
+        # print("bio_words", bio_words)
+        # print("query_skills", query_skills)
+        # print("matching skills", bio_words.intersection(query_skills))
     matched_records.sort(reverse=True, key=lambda x: x[0])  # Sort by similarity score
 
     total_records = len(matched_records)
@@ -99,7 +109,8 @@ def search_skills(query, records_per_page):
                 {
                     "user_id": r[1],
                     "bio": r[2],
-                    "similarity_score": round(r[0], 3)
+                    "similarity_score": round(r[0], 3),
+                    "matching_keywords": r[3]
                 }
                 for r in page_record
             ]

@@ -74,7 +74,7 @@ def populate_typesense():
 
     documents = []
     for user_id, bio in records:
-        embedding = model.encode(bio).tolist()  # Convert to list for storage
+        embedding = model.encode(str(bio).lower()).tolist()  # Convert to list for storage
         documents.append({"user_id": user_id, "bio": bio, "embedding": embedding})
 
     client.collections[COLLECTION_NAME].documents.import_(documents, {'action': 'upsert'})
