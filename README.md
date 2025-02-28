@@ -47,75 +47,69 @@ python main.py
 
 ##  Search Example
 ```
-Enter skills to search (comma-separated)(exit to exit): sql,cybersecurity
-Enter number of records per page: 2
+Enter skills to search (comma-separated)(exit to exit): give me people with sql, python and databricks skills
+Enter number of records per page: 10
 ```
 ### Example Output
 ```json
 [RESULT #PAGE-1]
 
 {"page_number": 1,
- "record_count_in_page": 2,
- "records": [{"bio": "Cybersecurity expert with knowledge of SIEM, SOC, and "
-                     "threat hunting.",
-              "similarity_score": 0.497,
-              "user_id": 10},
-             {"bio": "Data scientist with strong skills in SQL, Databricks, "
+ "record_count_in_page": 10,
+ "records": [{"bio": "Data scientist with strong skills in SQL, Databricks, "
                      "and Python.",
-              "similarity_score": 0.452,
-              "user_id": 6}],
- "total_records": 10}
-[RESULT #PAGE-2]
-
-{"page_number": 2,
- "record_count_in_page": 2,
- "records": [{"bio": "Experienced software engineer skilled in Python, SQL, "
+              "matching_keywords": ["with",
+                                    "sql",
+                                    "databricks",
+                                    "and",
+                                    "skills"],
+              "similarity_score": 0.876,
+              "user_id": 6},
+             {"bio": "Experienced software engineer skilled in Python, SQL, "
                      "and cloud computing",
-              "similarity_score": 0.438,
+              "matching_keywords": ["python", "sql", "and"],
+              "similarity_score": 0.658,
               "user_id": 11},
              {"bio": "Data analyst with expertise in SQL, Python, and data "
                      "visualization",
-              "similarity_score": 0.435,
-              "user_id": 12}],
- "total_records": 10}
-[RESULT #PAGE-3]
-
-{"page_number": 3,
- "record_count_in_page": 2,
- "records": [{"bio": "Database administrator with experience in SQL, "
-                     "PostgreSQL, and MySQL.",
-              "similarity_score": 0.41,
-              "user_id": 7},
+              "matching_keywords": ["python", "with", "sql", "and"],
+              "similarity_score": 0.61,
+              "user_id": 12},
              {"bio": "Backend developer specializing in Python frameworks and "
                      "database optimization",
-              "similarity_score": 0.359,
-              "user_id": 13}],
- "total_records": 10}
-[RESULT #PAGE-4]
-
-{"page_number": 4,
- "record_count_in_page": 2,
- "records": [{"bio": "Full-stack developer with React, Node.js, and PostgreSQL "
+              "matching_keywords": ["python", "and"],
+              "similarity_score": 0.554,
+              "user_id": 13},
+             {"bio": "Database administrator with experience in SQL, "
+                     "PostgreSQL, and MySQL.",
+              "matching_keywords": ["with", "sql", "and"],
+              "similarity_score": 0.475,
+              "user_id": 7},
+             {"bio": "Full-stack developer with React, Node.js, and PostgreSQL "
                      "knowledge.",
-              "similarity_score": 0.279,
+              "matching_keywords": ["with", "and"],
+              "similarity_score": 0.444,
               "user_id": 5},
              {"bio": "DevOps engineer proficient in Docker, Kubernetes, and "
                      "Terraform.",
-              "similarity_score": 0.181,
-              "user_id": 8}],
- "total_records": 10}
-[RESULT #PAGE-5]
-
-{"page_number": 5,
- "record_count_in_page": 2,
- "records": [{"bio": "Cloud architect experienced in AWS, Terraform, and CI/CD "
+              "matching_keywords": ["and"],
+              "similarity_score": 0.4,
+              "user_id": 8},
+             {"bio": "Cloud architect experienced in AWS, Terraform, and CI/CD "
                      "pipelines.",
-              "similarity_score": 0.172,
+              "matching_keywords": ["and"],
+              "similarity_score": 0.321,
               "user_id": 4},
              {"bio": "AI researcher skilled in NLP, OpenAI models, and deep "
                      "learning.",
-              "similarity_score": 0.142,
-              "user_id": 9}],
+              "matching_keywords": ["and"],
+              "similarity_score": 0.313,
+              "user_id": 9},
+             {"bio": "Cybersecurity expert with knowledge of SIEM, SOC, and "
+                     "threat hunting.",
+              "matching_keywords": ["with", "and"],
+              "similarity_score": 0.262,
+              "user_id": 10}],
  "total_records": 10}
 ```
 
