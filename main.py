@@ -1,19 +1,29 @@
-from populate import populate_typesense
-from search import search_skills
-import time
-from pprint import pprint
+import json
+from query_search import search_skills
+import nltk
+# from nltk import downloader
+
+nltk.download("stopwords")
+nltk.download('punkt')
+def main():
+    while True:
+        query = input("Enter search query (or 'exit' to quit): ")
+        if query.lower() == 'exit':
+            break
+        
+        page = input("Enter page number: ")
+        try:
+            page = int(page)
+            if page < 1:
+                print("Page number must be 1 or greater.")
+                continue
+        except ValueError:
+            print("Invalid page number. Please enter a valid integer.")
+            continue
+        
+        results = search_skills(query.lower(), page)
+        
+        print(json.dumps(results, indent=4))
 
 if __name__ == "__main__":
-    print("Populating Typesense with PostgreSQL data...")
-    populate_typesense()
-    time.sleep(5) # sleeping for 5 sec to let all the services be up and running
-    while True:
-        query = input("Enter skills to search (comma-separated)(exit to exit): ")
-        if query.strip().lower()=="exit":
-            break
-        records_per_page = int(input("Enter number of records per page: "))
-
-        results = search_skills(query, records_per_page)
-        for idx, page_data in enumerate(results):
-            print(f"[RESULT #PAGE-{idx+1}]\n")
-            pprint(page_data)
+    main()
