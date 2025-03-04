@@ -25,6 +25,26 @@ This project enables **semantic search for employee skills** using **PostgreSQL*
 |                                    #release all the resources after exit commnd
 └── README.md                 # Project documentation
 ```
+## ⚙️ Configuration
+Set up `.env` files for **both the project and Docker**:
+
+#### **Project `.env`**
+```
+POSTGRES_DB=test_db
+POSTGRES_USER=test_user
+POSTGRES_PASSWORD=test@123
+POSTGRES_PORT=5432
+TYPESENSE_HOST=localhost
+TYPESENSE_PORT=8108
+TYPESENSE_API_KEY=xyz123
+```
+
+#### **Docker `.env`**
+```
+POSTGRES_USER=test_user
+POSTGRES_PASSWORD=test@123
+POSTGRES_DB=test_db
+```
 
 ##  Setup & Installation
 
@@ -152,25 +172,15 @@ Enter page number: 1
 ]
 ```
 
-## ⚙️ Configuration
-Set up `.env` files for **both the project and Docker**:
-
-#### **Project `.env`**
-```
-POSTGRES_DB=test_db
-POSTGRES_USER=test_user
-POSTGRES_PASSWORD=test@123
-POSTGRES_PORT=5432
-TYPESENSE_HOST=localhost
-TYPESENSE_PORT=8108
-TYPESENSE_API_KEY=xyz123
+### for releasing the resources and removing the containers and volumes
+```sh
+docker-compose down -v
 ```
 
-#### **Docker `.env`**
-```
-POSTGRES_USER=test_user
-POSTGRES_PASSWORD=test@123
-POSTGRES_DB=test_db
+### for deactivating the virtual environment
+
+```sh
+deactivate
 ```
 
 ##  Technologies Used
