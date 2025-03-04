@@ -15,15 +15,36 @@ This project enables **semantic search for employee skills** using **PostgreSQL*
 ├── .env                      # Environment variables
 ├── docker-compose.yml        # Docker setup for PostgreSQL & Typesense
 ├── requirements.txt          # Python dependencies
-├── db.py                     # PostgreSQL connection
-├── typesense_client.py       # Typesense client setup
-├── populate.py               # Fetches data from PostgreSQL & indexes it in Typesense
-├── search.py                 # Searches for skills based on query
+├── init-db.sql               # Postgresql Query that inserts the data in postgresh for initial move
+├── data_ingestion.py         # Fetches data from PostgreSQL & indexes it in Typesense
+├── query_search.py           # Searches for skills based on query
+├── embedding_utils.py        # Used for finding the embeddings of the data to pe put in Typesense
+├── consts.py                 # Constants that are used in the Project
 ├── main.py                   # CLI interface to run the search
+├── run.sh                    # Contains all the commands that can be run after virtual environment activation to run the project in one go and
+|                                    #release all the resources after exit commnd
 └── README.md                 # Project documentation
 ```
 
 ##  Setup & Installation
+
+### create a virtual environment and activate it
+```sh 
+python -m venv venv
+
+source ./venv/bin/activate
+
+```
+---
+- there are two ways to run the project after activating the virtual environment
+---
+## 1st method (for running in one go for testing)
+```sh
+chmod +x run.sh
+./run.sh
+```
+---
+## 2nd method (for running it step by step)
 
 ###  Install Dependencies
 ```sh
@@ -35,9 +56,14 @@ pip install -r requirements.txt
 docker-compose up -d
 ```
 
+### Set the path for NLTK_DATA and install some required files
+```sh
+export NLTK_DATA="$HOME/nltk_data"
+python -m nltk.downloader stopwords punkt_tab
+```
 ###  Populate Typesense with Employee Skills
 ```sh
-python populate.py
+python data_ingestion.py
 ```
 
 ###  Run the Skill Search
@@ -47,70 +73,83 @@ python main.py
 
 ##  Search Example
 ```
-Enter skills to search (comma-separated)(exit to exit): give me people with sql, python and databricks skills
-Enter number of records per page: 10
+Enter search query (or 'exit' to quit): give me people with sql, python and django framework skills
+Enter page number: 1
 ```
 ### Example Output
 ```json
-[RESULT #PAGE-1]
-
-{"page_number": 1,
- "record_count_in_page": 10,
- "records": [{"bio": "Data scientist with strong skills in SQL, Databricks, "
-                     "and Python.",
-              "matching_keywords": ["with",
-                                    "sql",
-                                    "databricks",
-                                    "and",
-                                    "skills"],
-              "similarity_score": 0.876,
-              "user_id": 6},
-             {"bio": "Experienced software engineer skilled in Python, SQL, "
-                     "and cloud computing",
-              "matching_keywords": ["python", "sql", "and"],
-              "similarity_score": 0.658,
-              "user_id": 11},
-             {"bio": "Data analyst with expertise in SQL, Python, and data "
-                     "visualization",
-              "matching_keywords": ["python", "with", "sql", "and"],
-              "similarity_score": 0.61,
-              "user_id": 12},
-             {"bio": "Backend developer specializing in Python frameworks and "
-                     "database optimization",
-              "matching_keywords": ["python", "and"],
-              "similarity_score": 0.554,
-              "user_id": 13},
-             {"bio": "Database administrator with experience in SQL, "
-                     "PostgreSQL, and MySQL.",
-              "matching_keywords": ["with", "sql", "and"],
-              "similarity_score": 0.475,
-              "user_id": 7},
-             {"bio": "Full-stack developer with React, Node.js, and PostgreSQL "
-                     "knowledge.",
-              "matching_keywords": ["with", "and"],
-              "similarity_score": 0.444,
-              "user_id": 5},
-             {"bio": "DevOps engineer proficient in Docker, Kubernetes, and "
-                     "Terraform.",
-              "matching_keywords": ["and"],
-              "similarity_score": 0.4,
-              "user_id": 8},
-             {"bio": "Cloud architect experienced in AWS, Terraform, and CI/CD "
-                     "pipelines.",
-              "matching_keywords": ["and"],
-              "similarity_score": 0.321,
-              "user_id": 4},
-             {"bio": "AI researcher skilled in NLP, OpenAI models, and deep "
-                     "learning.",
-              "matching_keywords": ["and"],
-              "similarity_score": 0.313,
-              "user_id": 9},
-             {"bio": "Cybersecurity expert with knowledge of SIEM, SOC, and "
-                     "threat hunting.",
-              "matching_keywords": ["with", "and"],
-              "similarity_score": 0.262,
-              "user_id": 10}],
- "total_records": 10}
+[
+    {
+        "user_id": 11,
+        "user_bio": "Experienced software engineer skilled in Python, SQL, and cloud computing",
+        "similarity_score": 0.669215738773346,
+        "matching_keyword": [
+            "sql",
+            "python"
+        ]
+    },
+    {
+        "user_id": 13,
+        "user_bio": "Backend developer specializing in Python frameworks and database optimization",
+        "similarity_score": 0.6598625779151917,
+        "matching_keyword": [
+            "python",
+            "framework"
+        ]
+    },
+    {
+        "user_id": 2,
+        "user_bio": "Machine learning specialist with Python, TensorFlow, and SQL experience.",
+        "similarity_score": 0.6584064960479736,
+        "matching_keyword": [
+            "sql",
+            "python"
+        ]
+    },
+    {
+        "user_id": 6,
+        "user_bio": "Data scientist with strong skills in SQL, Databricks, and Python.",
+        "similarity_score": 0.601262092590332,
+        "matching_keyword": [
+            "sql",
+            "python",
+            "skills"
+        ]
+    },
+    {
+        "user_id": 12,
+        "user_bio": "Data analyst with expertise in SQL, Python, and data visualization",
+        "similarity_score": 0.5005065202713013,
+        "matching_keyword": [
+            "sql",
+            "python"
+        ]
+    },
+    {
+        "user_id": 1,
+        "user_bio": "Experienced data engineer skilled in Databricks, SQL, and Apache Spark.",
+        "similarity_score": 0.4846632480621338,
+        "matching_keyword": [
+            "sql"
+        ]
+    },
+    {
+        "user_id": 7,
+        "user_bio": "Database administrator with experience in SQL, PostgreSQL, and MySQL.",
+        "similarity_score": 0.4649410843849182,
+        "matching_keyword": [
+            "sql"
+        ]
+    },
+    {
+        "user_id": 5,
+        "user_bio": "Full-stack developer with React, Node.js, and PostgreSQL knowledge.",
+        "similarity_score": 0.41084957122802734,
+        "matching_keyword": [
+            "sql"
+        ]
+    }
+]
 ```
 
 ## ⚙️ Configuration
@@ -140,4 +179,5 @@ POSTGRES_DB=test_db
 - **Typesense** 🔍
 - **Sentence Transformers** 🤖
 - **Docker-compose** 🐳
+- **NLTK**
 
